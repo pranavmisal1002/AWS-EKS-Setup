@@ -81,7 +81,7 @@ Create a worker node group so EC2 worker nodes can join your EKS cluster.
    - **Node IAM role:** Select `eks-node-role`
 5. Click **Next**
 6. Choose instance type (example):
-   - `t3.medium`
+   - `c7i-flex.large`
 7. Configure scaling (example):
    - **Desired:** 2
    - **Min:** 1
@@ -205,5 +205,5 @@ kubectl get nodes
 kubectl get pods -A
 ```
 
-##✅ If nodes show Ready, your EKS setup is successful 🎉
+## ✅ If nodes show Ready, your EKS setup is successful 🎉
 
