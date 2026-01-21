@@ -91,3 +91,119 @@ Create a worker node group so EC2 worker nodes can join your EKS cluster.
 
 ✅ **Node group will be created and worker nodes will join the cluster automatically.**
 
+## Launch EC2 Instance Install kubectl on Linux (Ubuntu)
+
+Launch an EC2 instance that will host both the **Install kubectl on Linux (Ubuntu)**.
+
+1. Go to **EC2** → **Launch Instance**
+2. Instance Name:
+   - `Master-Node`
+3. AMI:
+   - Ubuntu `22.04`
+4. Instance Type:
+   - `c7i-flex.large` *(change according to backend load)*
+5. Storage:
+   - `20 GB` *(increase based on application requirements)*
+6. Security Group (Inbound Rules):
+   - Allow `22` (SSH)
+   - Allow `8080` (Backend)
+   - Allow `80` (Frontend / Apache)
+
+Click **Launch Instance** ✅
+
+---
+
+#  Connect to EC2 & Install
+
+## Install kubectl on Linux (Ubuntu)
+
+### 6) Download kubectl
+
+Download the latest stable version of `kubectl`:
+
+```bash
+curl -LO "https://dl.k8s.io/release/$(curl -L -s https://dl.k8s.io/release/stable.txt)/bin/linux/amd64/kubectl"
+```
+### 7) Validate the kubectl Binary
+
+Download the checksum file:
+
+```bash
+curl -LO "https://dl.k8s.io/release/$(curl -L -s https://dl.k8s.io/release/stable.txt)/bin/linux/amd64/kubectl.sha256"
+```
+Verify the checksum:
+
+```bash
+echo "$(cat kubectl.sha256)  kubectl" | sha256sum --check
+```
+
+### 8) Install kubectl
+
+Install `kubectl` to `/usr/local/bin` with correct permissions:
+
+```bash
+sudo install -o root -g root -m 0755 kubectl /usr/local/bin/kubectl
+```
+✅ Verify installation:
+```bash
+kubectl version --client
+```
+> **Note (Optional): Install kubectl without root access**
+
+If you do not have root permissions, you can install `kubectl` in your local user directory:
+
+```bash
+chmod +x kubectl
+mkdir -p ~/.local/bin
+mv ./kubectl ~/.local/bin/kubectl
+```
+##  Install AWS CLI & Configure
+
+### 9) Install AWS CLI
+
+Install AWS CLI on Ubuntu using Snap:
+
+```bash
+sudo snap install aws-cli --classic
+```
+✅ Verify installation:
+```bash
+aws --version
+```
+### 10) Configure AWS CLI
+
+Configure AWS CLI with your AWS credentials:
+
+```bash
+aws configure
+```
+Enter the following details when prompted:
+
+- **AWS Access Key**
+- **AWS Secret Key**
+- **Default region name:** `ap-south-1` (example)
+- **Default output format:** `json`
+## ✅ Login / Connect to EKS Cluster
+
+### 11) Update kubeconfig
+
+Configure your local kubeconfig to connect with the EKS cluster:
+
+```bash
+aws eks update-kubeconfig --name <your_eks_cluster_name> --region <your-region>
+```
+Example:
+```bash
+aws eks update-kubeconfig --name my-eks-cluster
+```
+### 12) Verify Cluster Connection
+
+Run the following commands to confirm you are connected to the EKS cluster:
+
+```bash
+kubectl get nodes
+kubectl get pods -A
+```
+
+##✅ If nodes show Ready, your EKS setup is successful 🎉
+
