@@ -207,3 +207,4 @@ kubectl get pods -A
 
 ## ✅ If nodes show Ready, your EKS setup is successful 🎉
 
+---
